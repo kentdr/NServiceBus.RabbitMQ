@@ -73,12 +73,12 @@ jobs:
         run: |
           $hostInfo = curl -H Metadata:true "169.254.169.254/metadata/instance?api-version=2017-08-01" | ConvertFrom-Json
           $region = $hostInfo.compute.location
-#TODO:          
+          
           $hostname = "psw-ravendb-$(Get-Random)"
           echo "::set-output name=hostname::$hostname"
-#TODO:
+          
           echo "Creating RavenDB container $hostname in $region (This can take a while.)"
-#TODO:
+          
           $details = az container create --image ravendb/ravendb:4.2-ubuntu-latest  --name $hostname --location $region --dns-name-label $hostname --resource-group GitHubActions-RG --cpu 4 --memory 16 --ports 8080 38888 --ip-address public -e RAVEN_ARGS='--ServerUrl=http://0.0.0.0:8080 --Setup.Mode=None --License.Eula.Accepted=true --Security.UnsecuredAccessAllowed=PublicNetwork' | ConvertFrom-Json
 
           $fqdn=$details.ipAddress.fqdn
@@ -86,9 +86,9 @@ jobs:
 
           echo "Tagging container image"
           $dateTag = "Created=$(Get-Date -Format "yyyy-MM-dd")"
-# TODO:
+
           $ignore = az tag create --resource-id $details.id --tags Package=RavenPersistence RunnerOS=${{ runner.os }} $dateTag
-# TODO:
+
           echo "CommaSeparatedRavenClusterUrls=http://$($fqdn):8080" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
       - name: Run Windows tests
         if: matrix.name == 'Windows'
@@ -103,6 +103,5 @@ jobs:
       - name: Teardown RavenDB
         if: ${{ always() }}
         shell: pwsh
-        run: |    
-# TODO:    
+        run: |      
           $ignore = az container delete --resource-group GitHubActions-RG --name ${{ steps.setup-ravendb.outputs.hostname }} --yes
