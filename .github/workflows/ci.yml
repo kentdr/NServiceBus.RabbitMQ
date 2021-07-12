@@ -84,7 +84,7 @@ jobs:
           
           $details = az container create --image rabbitmq:3  --name $hostname --location $region --dns-name-label $hostname --resource-group GitHubActions-RG --cpu 4 --memory 16 --ports 5672 --ip-address public | ConvertFrom-Json
 
-          $fqdn=$details.ipAddress.fqdn
+          $fqdn=$details.ipAddress.ip
           echo "::add-mask::$fqdn"
 
           echo "Tagging container image"
@@ -92,7 +92,7 @@ jobs:
 
           $ignore = az tag create --resource-id $details.id --tags Package=RabbitMQTransport RunnerOS=${{ runner.os }} $dateTag
 
-          echo "RabbitMQTransport_ConnectionString=host=$hostname" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "RabbitMQTransport_ConnectionString=host=$fqdn" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
       - name: Run Windows tests
         if: matrix.name == 'Windows'
         # -m:1 parameter prevents test projects from being run in parallel, which could cause conflicts since PessimisticLocks project shares same tests
