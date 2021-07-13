@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="myp12.p12" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\NServiceBus.Transport.RabbitMQ\NServiceBus.Transport.RabbitMQ.csproj" />
   </ItemGroup>
 
@@ -20,6 +24,12 @@
     <PackageReference Include="Particular.Approvals" Version="0.3.0" />
     <PackageReference Include="PublicApiGenerator" Version="10.2.0" />
     <PackageReference Include="RabbitMQ.Client" Version="6.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="myp12.p12">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
